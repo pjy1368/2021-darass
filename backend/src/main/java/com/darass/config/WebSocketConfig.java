@@ -8,22 +8,10 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
-@Profile({"prod", "develop", "local"})
+@Profile({"prod", "develop", "local", "migration})
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    @Value("${stomp-broker.ip}")
-    private String StompBrokerIp;
-
-    @Value("${stomp-broker.port}")
-    private int StompBrokerPort;
-
-    @Value("${stomp-broker.username}")
-    private String StompBrokerUsername;
-
-    @Value("${stomp-broker.password}")
-    private String StompBrokerPassword;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
@@ -35,13 +23,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         messageBrokerRegistry.setApplicationDestinationPrefixes("/app");
 
-        messageBrokerRegistry.enableStompBrokerRelay("/queue")
-            .setRelayHost(StompBrokerIp)
-            .setRelayPort(StompBrokerPort)
-            .setSystemLogin(StompBrokerUsername)
-            .setSystemPasscode(StompBrokerPassword)
-            .setClientLogin(StompBrokerUsername)
-            .setClientPasscode(StompBrokerPassword);
+        messageBrokerRegistry.enableSimpleBroker("/queue");
     }
 
 }
+
